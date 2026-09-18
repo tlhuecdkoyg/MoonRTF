@@ -201,9 +201,11 @@ pub fn Document::body_paragraphs(self : Document) -> Array[Paragraph] {
 ///|
 pub fn Document::links(self : Document) -> Array[String] {
   let links : Array[String] = []
+  let seen : Map[String, Bool] = Map([])
   for paragraph in self.paragraphs {
     for run in paragraph.runs {
-      if run.link is Some(link) && !links.contains(link) {
+      if run.link is Some(link) && !seen.contains(link) {
+        seen[link] = true
         links.push(link)
       }
     }

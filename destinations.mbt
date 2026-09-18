@@ -173,18 +173,17 @@ fn Parser::finish_font(self : Parser, span : Span) -> Unit {
     codepage: self.state.font_codepage,
     family: self.state.family,
   }
-  for i in 0..<self.fonts.length() {
-    if self.fonts[i].id == font.id {
-      self.report(
-        "duplicate_font",
-        Warning,
-        "Duplicate font identifier; last declaration wins",
-        span,
-      )
-      self.fonts[i] = font
-      return
-    }
+  if self.font_indices.get(font.id) is Some(i) {
+    self.report(
+      "duplicate_font",
+      Warning,
+      "Duplicate font identifier; last declaration wins",
+      span,
+    )
+    self.fonts[i] = font
+    return
   }
+  self.font_indices[font.id] = self.fonts.length()
   self.fonts.push(font)
 }
 

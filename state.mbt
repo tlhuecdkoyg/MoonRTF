@@ -96,6 +96,7 @@ priv struct Parser {
   mut state : State
   paragraphs : Array[Paragraph]
   fonts : Array[Font]
+  font_indices : Map[Int, Int]
   colors : Array[Color]
   metadata : Array[Metadata]
   attachments : Array[Attachment]
@@ -131,6 +132,7 @@ fn Parser::new(input : Bytes, limits : Limits, recover : Bool) -> Parser {
     state: State::new(0),
     paragraphs: [],
     fonts: [],
+    font_indices: Map([]),
     colors: [],
     metadata: [],
     attachments: [],
@@ -345,14 +347,13 @@ fn Parser::emit_unicode(self : Parser, value : Int, span : Span) -> Unit {
 
 ///|
 fn Parser::effective_codepage(self : Parser) -> Int {
-  for font in self.fonts {
-    if font.id == self.state.style.font {
-      if font.codepage is Some(cp) {
-        return cp
-      }
-      if font.charset != 0 && font.charset != 1 {
-        return charset_codepage(font.charset).unwrap_or(-1)
-      }
+  if self.font_indices.get(self.state.style.font) is Some(index) {
+    let font = self.fonts[index]
+    if font.codepage is Some(cp) {
+      return cp
+    }
+    if font.charset != 0 && font.charset != 1 {
+      return charset_codepage(font.charset).unwrap_or(-1)
     }
   }
   self.state.codepage
@@ -367,7 +368,9 @@ fn Parser::emit_byte(self : Parser, b : Int, span : Span) -> Unit {
     self.fallback -= 1
     return
   }
-  if self.state.destination == "skip" {
+  if self.state.destination == "skip" ||
+    self.state.destination == "pict" ||
+    self.state.destination == "object" {
     return
   }
   self.flush_surrogate()
