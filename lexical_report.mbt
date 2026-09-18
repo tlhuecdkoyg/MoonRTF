@@ -45,7 +45,7 @@ pub fn scan(
   let mut depth = 0
   let mut maximum_depth = 0
   let mut truncated = false
-  while lexer.pos < input.length() {
+  while lexer.pos < input.length() || lexer.binary_remaining > 0 {
     if tokens.length() >= max_tokens {
       truncated = true
       break

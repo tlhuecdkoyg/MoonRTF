@@ -28,6 +28,7 @@ pub fn parse(
     }
     parser.consume(token)
   }
+  parser.flush_utf8()
   parser.flush_surrogate()
   parser.finish_paragraph(parser.lexer.pos, false)
   let end : Span = { start: parser.lexer.pos, end: parser.lexer.pos, }
@@ -66,8 +67,39 @@ pub fn parse(
 ///|
 fn Parser::consume(self : Parser, token : Token) -> Unit {
   let span = token.span
+  if self.stack.is_empty() {
+    match token.kind {
+      Open | Close | Text | End => ()
+      _ => {
+        self.report(
+          "control_outside_root",
+          Error,
+          "Escapes and controls must occur inside the root group",
+          span,
+        )
+        return
+      }
+    }
+  }
+  if !self.seen_version {
+    match token.kind {
+      Word(name, _) if name != "rtf" => {
+        self.report(
+          "header_order",
+          Error,
+          "The first control word must be the RTF version header",
+          span,
+        )
+        if self.stopped {
+          return
+        }
+      }
+      _ => ()
+    }
+  }
   match token.kind {
     Open => {
+      self.flush_utf8()
       self.fallback = 0
       self.flush_surrogate()
       self.flush_run()
@@ -90,6 +122,7 @@ fn Parser::consume(self : Parser, token : Token) -> Unit {
       self.state = self.state.child(span.start)
     }
     Close => {
+      self.flush_utf8()
       self.fallback = 0
       self.flush_surrogate()
       self.flush_run()
@@ -156,6 +189,7 @@ fn Parser::consume(self : Parser, token : Token) -> Unit {
 
 ///|
 fn Parser::symbol(self : Parser, symbol : Int, span : Span) -> Unit {
+  self.flush_utf8()
   if self.state.destination == "skip" {
     return
   }

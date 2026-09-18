@@ -28,6 +28,7 @@ priv struct State {
   mut width : Int?
   mut height : Int?
   start : Int
+  mut time : DocumentTime
 }
 
 ///|
@@ -55,6 +56,7 @@ fn State::new(start : Int) -> State {
     width: None,
     height: None,
     start,
+    time: { year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0, },
   }
 }
 
@@ -83,6 +85,7 @@ fn State::child(self : State, start : Int) -> State {
     width: self.width,
     height: self.height,
     start,
+    time: self.time,
   }
 }
 
@@ -108,6 +111,10 @@ priv struct Parser {
   mut paragraph_start : Int
   mut fallback : Int
   mut pending_high : Int?
+  mut utf8_remaining : Int
+  mut utf8_value : Int
+  mut utf8_minimum : Int
+  mut utf8_span : Span
   mut high_span : Span
   mut units : Int
   mut nodes : Int
@@ -144,6 +151,10 @@ fn Parser::new(input : Bytes, limits : Limits, recover : Bool) -> Parser {
     paragraph_start: 0,
     fallback: 0,
     pending_high: None,
+    utf8_remaining: 0,
+    utf8_value: 0,
+    utf8_minimum: 0,
+    utf8_span: { start: 0, end: 0, },
     high_span: { start: 0, end: 0, },
     units: 0,
     nodes: 0,
@@ -375,6 +386,10 @@ fn Parser::emit_byte(self : Parser, b : Int, span : Span) -> Unit {
   }
   self.flush_surrogate()
   let cp = self.effective_codepage()
+  if cp == 65001 {
+    self.emit_utf8(b, span)
+    return
+  }
   if b < 128 {
     if b == 0 {
       self.report("nul_text", Warning, "NUL in text was omitted", span)

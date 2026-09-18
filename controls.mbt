@@ -23,6 +23,10 @@ fn Parser::control(
   value : Int?,
   span : Span,
 ) -> Unit {
+  self.flush_utf8()
+  if self.time_control(name, value, span) {
+    return
+  }
   if self.state.destination == "skip" {
     self.state.starred = false
     return

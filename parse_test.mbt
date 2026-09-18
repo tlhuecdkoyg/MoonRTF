@@ -1,4 +1,11 @@
 ///|
+test "escapes outside the root and late headers are rejected" {
+  assert_true(@MoonRTF.parse(b"{\\rtf1 x}\\'41").has_errors())
+  assert_true(@MoonRTF.parse(b"{\\rtf1 x}\\{").has_errors())
+  assert_true(@MoonRTF.parse(b"{\\b\\rtf1 x}").has_errors())
+}
+
+///|
 test "plain paragraphs and styles preserve text" {
   let r = @MoonRTF.parse(b"{\\rtf1 Hello {\\b bold} world.\\par Next}")
   assert_true(r.acceptable())

@@ -61,7 +61,7 @@ fn Parser::destination(self : Parser, name : String, span : Span) -> Bool {
   if self.state.destination == "skip" {
     return true
   }
-  if metadata_key(name) {
+  if metadata_key(name) || time_destination(name) {
     self.flush_surrogate()
     self.flush_run()
     self.state.destination = name
@@ -209,7 +209,22 @@ fn Parser::close_destination(self : Parser, span : Span) -> Unit {
     return
   }
   let name = self.state.destination
-  if metadata_key(name) {
+  if time_destination(name) {
+    if self.state.time.valid() && self.take_node(span) {
+      self.metadata.push({
+        key: name,
+        value: self.state.time.to_iso(),
+        span: { start: self.state.start, end: span.end, },
+      })
+    } else {
+      self.report(
+        "invalid_timestamp",
+        Warning,
+        "Incomplete or invalid document timestamp was omitted",
+        span,
+      )
+    }
+  } else if metadata_key(name) {
     if self.take_node(span) {
       self.metadata.push({
         key: name,
