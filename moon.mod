@@ -19,8 +19,13 @@ repository = "https://github.com/tlhuecdkoyg/MoonRTF"
 
 license = "Apache-2.0"
 
-keywords = []
+keywords = [ ]
 
 preferred_target = "wasm"
 
 description = "Pure MoonBit RTF parsing, structured extraction, diagnostics, and text conversion."
+
+import {
+  "moonbitlang/x@0.5.1",
+  "moonbitlang/async@0.21.0",
+}

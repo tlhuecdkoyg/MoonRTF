@@ -1,0 +1,58 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "tlhuecdkoyg/MoonRTF/cli"
+
+import {
+  "moonbitlang/core/debug",
+  "tlhuecdkoyg/MoonRTF",
+}
+
+// Values
+pub fn defaults() -> Options
+
+pub fn execute(Bytes, Options) -> Output
+
+pub fn parse_args(Array[String]) -> Result[Options, String]
+
+pub fn usage() -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum Command {
+  Text
+  Json
+  Markdown
+  Inspect
+  Validate
+  Tokens
+  SourceMap
+  Csv
+  Help
+  Version
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Options {
+  command : Command
+  input : String
+  output : String?
+  overwrite : Bool
+  recover : Bool
+  fail_on_warning : Bool
+  pretty : Bool
+  json_report : Bool
+  text : @MoonRTF.TextOptions
+  limits : @MoonRTF.Limits
+  max_output : Int
+  max_tokens : Int
+  table_index : Int
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Output {
+  text : String
+  diagnostics : Array[String]
+  exit_code : Int
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

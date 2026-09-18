@@ -1,0 +1,13 @@
+import {
+  "tlhuecdkoyg/MoonRTF/cli",
+  "moonbitlang/core/env",
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/async/io",
+  "moonbitlang/async/stdio",
+  "moonbitlang/x/sys",
+}
+
+supported_targets = "+native"
+
+pkgtype(kind: "executable")
