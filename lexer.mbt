@@ -26,7 +26,7 @@ priv struct Lexer {
 
 ///|
 fn Lexer::new(input : Bytes) -> Lexer {
-  { input, pos: 0, binary_remaining: 0 }
+  { input, pos: 0, binary_remaining: 0, }
 }
 
 ///|
@@ -63,7 +63,7 @@ fn byte_string(input : Bytes, start : Int, end : Int) -> String {
 
 ///|
 fn Lexer::token(self : Lexer, start : Int, kind : TokenKind) -> Token {
-  { kind, span: { start, end: self.pos } }
+  { kind, span: { start, end: self.pos, }, }
 }
 
 ///|
@@ -135,7 +135,8 @@ fn Lexer::next(self : Lexer) -> Token {
   }
   let name = byte_string(self.input, name_start, name_end)
   let mut negative = false
-  if self.pos + 1 < n && self.input[self.pos].to_int() == 45 &&
+  if self.pos + 1 < n &&
+    self.input[self.pos].to_int() == 45 &&
     ascii_digit(self.input[self.pos + 1].to_int()) {
     negative = true
     self.pos += 1

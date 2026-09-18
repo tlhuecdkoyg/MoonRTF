@@ -40,8 +40,11 @@ pub fn Limits::default() -> Limits {
 
 ///|
 pub fn Limits::valid(self : Limits) -> Bool {
-  self.input_bytes > 0 && self.depth > 0 && self.nodes > 0 &&
-  self.output_units > 0 && self.diagnostics > 0
+  self.input_bytes > 0 &&
+  self.depth > 0 &&
+  self.nodes > 0 &&
+  self.output_units > 0 &&
+  self.diagnostics > 0
 }
 
 ///|
@@ -90,7 +93,7 @@ pub fn locate(input : Bytes, offset : Int) -> Location {
       previous_cr = false
     }
   }
-  { line, column, offset: end }
+  { line, column, offset: end, }
 }
 
 ///|

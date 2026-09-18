@@ -12,7 +12,10 @@ test "binary braces are not group tokens" {
 
 ///|
 test "overflow and truncation are bounded diagnostics" {
-  assert_eq(Lexer::new(b"\\u999999999999999999999").next().kind, Bad("parameter_overflow"))
+  assert_eq(
+    Lexer::new(b"\\u999999999999999999999").next().kind,
+    Bad("parameter_overflow"),
+  )
   assert_eq(Lexer::new(b"\\").next().kind, Bad("truncated_escape"))
   assert_eq(Lexer::new(b"\\'f").next().kind, Bad("truncated_hex"))
   let lex = Lexer::new(b"\\bin8 a")
