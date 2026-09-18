@@ -1,4 +1,21 @@
 ///|
+test "header precedes text escapes and nested groups in both modes" {
+  let invalid = [
+    b"{text\\rtf1 body}", b"{\\'41\\rtf1 body}", b"{\\~\\rtf1 body}", b"{{}\\rtf1 body}",
+    b"{{\\rtf1 body}}",
+  ]
+  for input in invalid {
+    for recover in [false, true] {
+      let result = @MoonRTF.parse(input, recover~)
+      assert_true(result.has_errors())
+      assert_true(!result.complete)
+    }
+  }
+  assert_eq(@MoonRTF.extract_text(b"{\r\n\\rtf1 body}"), "body")
+  assert_eq(@MoonRTF.extract_text(b"{text\\rtf1 body}", recover=true), "body")
+}
+
+///|
 test "escapes outside the root and late headers are rejected" {
   assert_true(@MoonRTF.parse(b"{\\rtf1 x}\\'41").has_errors())
   assert_true(@MoonRTF.parse(b"{\\rtf1 x}\\{").has_errors())

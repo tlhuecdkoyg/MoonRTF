@@ -29,7 +29,7 @@ moon run --target native cmd/main -- validate fixtures/malformed.rtf
 模块发布名为 `tlhuecdkoyg/MoonRTF`；发布状态见 [Releases](https://github.com/tlhuecdkoyg/MoonRTF/releases) 和 [Mooncakes](https://mooncakes.io/docs/tlhuecdkoyg/MoonRTF)。仅当该版本实际发布后才可从注册表安装：
 
 ```sh
-moon add tlhuecdkoyg/MoonRTF@0.1.0
+moon add tlhuecdkoyg/MoonRTF@0.1.1
 ```
 
 在消费包的 `moon.pkg` 导入模块并指定别名 `@rtf`。以下是直接针对本包运行的文档测试：
@@ -84,6 +84,7 @@ moon info
 python scripts/count_lines.py --minimum 4000
 moon build --target native --release cmd/main
 python scripts/smoke_cli.py
+python scripts/stress_cli.py
 ```
 
 行数脚本仅统计手写生产 `.mbt`，排除注释、空行、帮助文字块、测试、示例、生成接口和依赖。测试覆盖随机字节、逐字节截断、Unicode、编码错误、分组作用域、表格、导出、来源映射与 CLI。CI 在 Linux/Windows 运行。

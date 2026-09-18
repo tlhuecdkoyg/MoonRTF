@@ -217,7 +217,7 @@ pub fn parse_args(args : Array[String]) -> Result[Options, String] {
 ///|
 pub fn usage() -> String {
   (
-    #|MoonRTF 0.1.0 — bounded RTF extraction
+    #|MoonRTF 0.1.1 — bounded RTF extraction
     #|
     #|Usage: moonrtf COMMAND [FILE|-] [OPTIONS]
     #|

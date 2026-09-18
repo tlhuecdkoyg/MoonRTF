@@ -94,6 +94,26 @@ fn Parser::consume(self : Parser, token : Token) -> Unit {
           return
         }
       }
+      Hex(_) | Symbol(_) | Binary => {
+        self.report(
+          "header_order",
+          Error,
+          "Escapes must follow the RTF header",
+          span,
+        )
+        return
+      }
+      Open if !self.stack.is_empty() => {
+        self.report(
+          "header_order",
+          Error,
+          "Nested groups must follow the RTF header",
+          span,
+        )
+        if self.stopped {
+          return
+        }
+      }
       _ => ()
     }
   }
@@ -155,6 +175,15 @@ fn Parser::consume(self : Parser, token : Token) -> Unit {
               "text_outside_root",
               Error,
               "Non-whitespace text outside the root group",
+              { start: i, end: i + 1, },
+            )
+          }
+        } else if !self.seen_version {
+          if b != 10 && b != 13 && b != 32 && b != 9 {
+            self.report(
+              "header_order",
+              Error,
+              "Text must follow the RTF header",
               { start: i, end: i + 1, },
             )
           }

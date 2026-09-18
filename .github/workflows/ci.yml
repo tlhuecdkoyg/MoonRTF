@@ -51,3 +51,4 @@ jobs:
         run: |
           moon build --target native --release cmd/main
           python scripts/smoke_cli.py
+          python scripts/stress_cli.py

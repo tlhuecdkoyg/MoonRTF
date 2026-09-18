@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Reject body text, escapes and nested groups before the RTF header.
+- Add strict/recovery regression cases and deterministic native CLI mutation checks.
+
 ## 0.1.0
 
 - Bounded byte-level parser, Unicode and scoped Windows-1252/UTF-8 decoding.
