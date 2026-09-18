@@ -1,0 +1,53 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install latest stable MoonBit (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Install latest stable MoonBit (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Invoke-RestMethod https://cli.moonbitlang.com/install/powershell.ps1 | Invoke-Expression
+          "$env:USERPROFILE\.moon\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Versions and dependencies
+        run: |
+          moon version --all
+          moon update
+      - name: Check and test all supported backends
+        run: |
+          moon check --target all --deny-warn
+          moon test --target all --deny-warn
+      - name: Formatting and API
+        run: |
+          moon fmt --check
+          moon info
+          git diff --exit-code
+      - name: Effective production code
+        run: python scripts/count_lines.py --minimum 4000
+      - name: Build and exercise CLI
+        run: |
+          moon build --target native --release cmd/main
+          python scripts/smoke_cli.py

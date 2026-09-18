@@ -1,0 +1,5 @@
+import {
+  "tlhuecdkoyg/MoonRTF" @rtf,
+}
+
+pkgtype(kind: "executable")
