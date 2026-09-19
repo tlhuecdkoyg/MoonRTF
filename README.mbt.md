@@ -8,7 +8,17 @@ Pure MoonBit RTF parsing and extraction with bounded inputs, source ranges, diag
 
 ## 快速运行
 
-需要最新稳定版 [MoonBit](https://www.moonbitlang.com/download/)。本地验证版本：`moonc 0.10.13` / `moon 20260915`。原生 CLI 需要 C 编译环境；库本身支持 wasm、wasm-gc、js、native。
+本项目的本地验证基线是 **2026-09-15 发布的 MoonBit 工具链**，组件版本由 `moon version --all` 核实：
+
+| 组件 | 完整版本 | 构建日期 |
+| --- | --- | --- |
+| 构建工具 `moon` | `0.1.20260915 (2e1a46d)` | `2026-09-15` |
+| 编译器 `moonc` | `v0.10.13+cbb11c36f` | `2026-09-15` |
+| 执行器 `moonrun` | `0.1.20260915 (2e1a46d)` | `2026-09-15` |
+
+工具链安装入口见 [MoonBit 下载页](https://www.moonbitlang.com/download/)。安装后执行 `moon version --all` 核对版本；下载页的 stable 渠道会更新，并不固定为上述版本。其他工具链版本需重新运行本文的验证命令，不将“更新版本”视为已验证兼容。
+
+原生 CLI 需要 C 编译环境；本地 Windows 构建使用 MSVC。库支持 `wasm`、`wasm-gc`、`js`、`native` 四个后端。Python 3 用于仓库内的行数统计与 CLI 检查，不是库或 CLI 的运行时依赖。
 
 ```sh
 git clone https://github.com/tlhuecdkoyg/MoonRTF.git
@@ -27,13 +37,15 @@ moon run --target native cmd/main -- validate fixtures/malformed.rtf
 
 ## 库接口
 
-模块发布名为 `tlhuecdkoyg/MoonRTF`；发布状态见 [Releases](https://github.com/tlhuecdkoyg/MoonRTF/releases) 和 [Mooncakes](https://mooncakes.io/docs/tlhuecdkoyg/MoonRTF)。仅当该版本实际发布后才可从注册表安装：
+模块发布名为 `tlhuecdkoyg/MoonRTF`。版本源码见 [GitHub 标签](https://github.com/tlhuecdkoyg/MoonRTF/tags)，已发布版本及 API 文档见 [Mooncakes](https://mooncakes.io/docs/tlhuecdkoyg/MoonRTF)。安装指定版本：
 
 ```sh
-moon add tlhuecdkoyg/MoonRTF@0.1.1
+moon add tlhuecdkoyg/MoonRTF@0.2.0
 ```
 
-在消费包的 `moon.pkg` 导入模块并指定别名 `@rtf`。以下是直接针对本包运行的文档测试：
+已有依赖的消费项目需使用 `moon add --upgrade tlhuecdkoyg/MoonRTF@0.2.0` 显式升级；普通 `moon add` 不替换已有版本。
+
+在消费包的 `moon.pkg` 导入模块并指定别名 `@rtf`。以下是直接针对本包运行的文档测试（测试使用本包默认别名 `@MoonRTF`）：
 
 ```mbt check
 ///|
@@ -91,7 +103,9 @@ python scripts/smoke_cli.py
 python scripts/stress_cli.py
 ```
 
-行数脚本仅统计手写生产 `.mbt`，排除注释、空行、帮助文字块、测试、示例、生成接口和依赖。测试覆盖随机字节、逐字节截断、Unicode、编码错误、分组作用域、表格、导出、来源映射与 CLI。CI 在 Linux/Windows 运行。
+行数脚本统计生产 `.mbt` 中含代码的物理行，排除注释、空行、帮助文字块、测试、示例、生成接口和依赖；此指标描述源码规模，不单独代表功能完整性或工程质量。测试覆盖随机字节、逐字节截断、Unicode、编码错误、分组作用域、表格、导出、来源选区映射与 CLI。
+
+CI 在 Linux/Windows 上安装运行当时 stable 渠道的工具链，并在日志中记录完整版本；这是持续兼容性检查，与上面的固定本地验证基线有区别。版本验证记录见 [0.2.0 验证报告](docs/validation-0.2.0.md)。
 
 工程设计见 [design](docs/design.md)，发布步骤见 [release](docs/release.md)，许可证与参考资料见 [THIRD_PARTY](THIRD_PARTY.md)。
 

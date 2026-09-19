@@ -1,4 +1,4 @@
-# v0.1 支持矩阵
+# v0.2 支持矩阵
 
 | 能力 | 支持范围 | 验证文件 |
 | --- | --- | --- |
@@ -13,9 +13,9 @@
 | 图片/对象 | 记录位置、尺寸；不解码图像，不执行对象 | fixtures 与解析分支 |
 | 区域 | 正文、页眉、页脚、脚注、注释 | parse_test.mbt |
 | 导出 | 文本、JSON、基本 Markdown、语义 HTML、表格 CSV | render_test.mbt, features_test.mbt |
-| 来源与检索 | 输出 UTF-16 范围到输入字节范围；跨 run 搜索 | features_test.mbt |
+| 来源与检索 | 输出 UTF-16 选区到输入字节范围；跨 run 搜索 | features_test.mbt, source_range_test.mbt |
 | 验证 | 语法、资源、字体/颜色引用、链接策略 | conversion_test.mbt, render_test.mbt |
-| CLI | stdin/文件、错误退出码、覆盖保护 | scripts/smoke_cli.py |
+| CLI | stdin/文件、HTML 片段导出、错误退出码、覆盖保护 | cli/html_test.mbt, scripts/smoke_cli.py |
 
 来源映射是包围范围，不保证每个字符对应唯一连续输入字节；生成的段落分隔符不指向源码。JSON schema 是版本化的，不依赖 MoonBit enum 默认编码。RTF 时间无时区信息，不伪造 UTC。
 

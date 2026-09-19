@@ -28,7 +28,7 @@ fn bounded_output(
 pub fn execute(input : Bytes, options : Options) -> Output {
   match options.command {
     Help => return { text: usage(), diagnostics: [], exit_code: 0, }
-    Version => return { text: "MoonRTF 0.1.1", diagnostics: [], exit_code: 0, }
+    Version => return { text: "MoonRTF 0.2.0", diagnostics: [], exit_code: 0, }
     Tokens => {
       let scan = @rtf.scan(
         input,

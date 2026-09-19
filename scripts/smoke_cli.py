@@ -23,7 +23,7 @@ def run(*args, data=None, code=0):
 
 
 assert "Usage:" in run("--help")
-assert "0.1.1" in run("--version")
+assert "0.2.0" in run("--version")
 text = run("text", "fixtures/basic.rtf")
 assert "中文 😀" in text and "MoonRTF" in text
 document = json.loads(run("json", "fixtures/basic.rtf", "--pretty"))
