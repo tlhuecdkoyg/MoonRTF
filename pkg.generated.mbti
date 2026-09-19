@@ -144,6 +144,7 @@ pub(all) struct MappedText {
 } derive(Eq, ToJson, @debug.Debug)
 pub fn MappedText::find_all(Self, String, ascii_insensitive? : Bool, max_matches? : Int, overlapping? : Bool) -> Array[TextMatch]
 pub fn MappedText::source_at(Self, Int) -> Span?
+pub fn MappedText::source_range(Self, Int, Int) -> TextMatch?
 pub fn MappedText::to_json_text(Self) -> String
 
 pub(all) struct Metadata {

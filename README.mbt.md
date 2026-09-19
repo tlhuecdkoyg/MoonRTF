@@ -55,6 +55,7 @@ test "README extraction" {
 - `ParseResult::to_json_text`：`moonrtf.document.v1` 结构化输出。
 - `Document::tables` / `Table::to_csv`：简单表格提取。
 - `Document::mapped_text` / `find_text`：定位到原始字节范围。
+- `MappedText::source_range(start, end)`：将非空 UTF-16 半开选区映射到相关 run 的输入字节范围及段落编号。越界、空选区、反向选区返回 `None`；仅包含生成分隔符的合法选区返回空来源列表。
 - `ParseResult::convert`：返回转换结果、格式损失诊断及输出限额状态。
 - `Document::statistics` / `created_time` / `revised_time`：统计与时间元数据。
 

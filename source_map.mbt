@@ -76,6 +76,23 @@ pub fn MappedText::source_at(self : MappedText, output_offset : Int) -> Span? {
 }
 
 ///|
+/// Map a nonempty, half-open UTF-16 selection to its contributing source runs.
+/// Returns None for out-of-bounds, empty or reversed ranges. A selection of
+/// generated separators is valid but has no sources. Source spans encompass
+/// whole runs, even when only part of a run is selected. As with source_at,
+/// offsets may address either UTF-16 unit of a supplementary character.
+pub fn MappedText::source_range(
+  self : MappedText,
+  start : Int,
+  end : Int,
+) -> TextMatch? {
+  if start < 0 || end <= start || end > self.text.length() {
+    return None
+  }
+  Some(self.match_range(start, end))
+}
+
+///|
 pub fn Document::runs_at_source(
   self : Document,
   byte_offset : Int,
