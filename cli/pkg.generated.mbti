@@ -22,6 +22,7 @@ pub(all) enum Command {
   Text
   Json
   Markdown
+  Html
   Inspect
   Validate
   Tokens

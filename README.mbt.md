@@ -18,6 +18,7 @@ moon run examples/basic
 moon run --target native cmd/main -- text fixtures/basic.rtf
 moon run --target native cmd/main -- json fixtures/basic.rtf --pretty
 moon run --target native cmd/main -- markdown fixtures/basic.rtf
+moon run --target native cmd/main -- html fixtures/basic.rtf -o fragment.html
 moon run --target native cmd/main -- csv fixtures/table.rtf
 moon run --target native cmd/main -- validate fixtures/malformed.rtf
 ```
@@ -69,7 +70,9 @@ test "README extraction" {
 
 ## CLI 与限额
 
-命令：`text`、`json`、`markdown`、`inspect`、`validate`、`tokens`、`source-map`、`csv`。省略文件名或使用 `-` 从 stdin 读取。`-o FILE` 写文件，默认拒绝覆盖，`--force` 才允许覆盖已有输出；输入文件受到保护。
+命令：`text`、`json`、`markdown`、`html`、`inspect`、`validate`、`tokens`、`source-map`、`csv`。省略文件名或使用 `-` 从 stdin 读取。`-o FILE` 写文件，默认拒绝覆盖，`--force` 才允许覆盖已有输出；输入文件受到保护。
+
+`html` 输出语义 HTML 片段，保留基础样式和单层表格，转义正文及链接属性，并限制可激活的链接协议。它不生成完整 HTML 页面，不加载嵌入对象或外部资源；区域和隐藏文本选项与库接口一致。
 
 退出码：0 成功；1 文档错误、资源限额或所选校验策略失败；2 参数/文件 I/O 错误。诊断与正常输出分流。`--recover` 保留可恢复内容，但错误仍返回 1；`--strict` 使警告也影响成功判定。
 

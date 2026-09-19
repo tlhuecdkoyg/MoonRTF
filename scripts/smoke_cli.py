@@ -29,6 +29,10 @@ assert "中文 😀" in text and "MoonRTF" in text
 document = json.loads(run("json", "fixtures/basic.rtf", "--pretty"))
 assert document["schema"] == "moonrtf.document.v1" and document["complete"]
 assert "**MoonRTF**" in run("markdown", "fixtures/basic.rtf")
+assert "<strong>MoonRTF</strong>" in run("html", "fixtures/basic.rtf")
+html = run("html", "-", data=b"{\\rtf1 <script>{\\v secret}}")
+assert "&lt;script&gt;" in html and "secret" not in html
+run("html", "-", "--max-output", "1", data=b"{\\rtf1 x}", code=1)
 assert "Input bytes:" in run("inspect", "fixtures/basic.rtf")
 assert json.loads(run("validate", "fixtures/basic.rtf", "--json"))["valid"]
 assert run("csv", "fixtures/table.rtf") == "Name,Value\r\nA,42\r\n"
@@ -47,4 +51,7 @@ with tempfile.TemporaryDirectory() as directory:
     assert "中文" in output.read_text(encoding="utf-8")
     run("text", "fixtures/basic.rtf", "-o", output, code=2)
     run("text", "fixtures/basic.rtf", "-o", output, "--force")
+    html_output = Path(directory) / "fragment.html"
+    run("html", "fixtures/table.rtf", "-o", html_output)
+    assert "<table>" in html_output.read_text(encoding="utf-8")
 print(f"Native CLI smoke checks passed: {checks}")

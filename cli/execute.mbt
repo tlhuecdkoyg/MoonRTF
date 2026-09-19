@@ -91,6 +91,7 @@ pub fn execute(input : Bytes, options : Options) -> Output {
     Text => parsed.document.to_text(options=options.text)
     Json => parsed.to_json_text(pretty=options.pretty)
     Markdown => parsed.document.to_markdown(options=options.text)
+    Html => parsed.document.to_html(options=options.text)
     Inspect =>
       if options.json_report {
         parsed.document.statistics().to_json().stringify()

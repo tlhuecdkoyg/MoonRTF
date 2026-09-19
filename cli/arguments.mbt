@@ -3,6 +3,7 @@ pub(all) enum Command {
   Text
   Json
   Markdown
+  Html
   Inspect
   Validate
   Tokens
@@ -77,6 +78,7 @@ fn command_name(name : String) -> Command? {
     "text" => Some(Text)
     "json" => Some(Json)
     "markdown" => Some(Markdown)
+    "html" => Some(Html)
     "inspect" => Some(Inspect)
     "validate" => Some(Validate)
     "tokens" => Some(Tokens)
@@ -225,6 +227,7 @@ pub fn usage() -> String {
     #|  text        Extract visible body text (tables use tabs)
     #|  json        Export the structured document and diagnostics
     #|  markdown    Export basic Markdown with safe links
+    #|  html        Export a semantic HTML fragment with safe links
     #|  inspect     Show metadata and document statistics
     #|  validate    Check syntax, references and supported features
     #|  tokens      Inspect the bounded lexical token stream
